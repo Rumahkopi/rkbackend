@@ -1,49 +1,80 @@
-package rkbackend
+package rkbackend	
 
 import (
-	"encoding/json"
-	"net/http"
-	"os"
+	"context"
+	"errors"
+	"fmt"
 
-	"github.com/aiteung/atdb"
-	"github.com/whatsauth/watoken"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func GCFPostHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
-	var Response Credential
-	Response.Status = false
-	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
-	var dataadmin Admin
-	err := json.NewDecoder(r.Body).Decode(&dataadmin)
+func InsertOneDoc(db *mongo.Database, col string, docs interface{}) (insertedID primitive.ObjectID, err error) {
+	cols := db.Collection(col)
+	result, err := cols.InsertOne(context.Background(), docs)
 	if err != nil {
-		Response.Message = "error parsing application/json: " + err.Error()
-	} else {
-		if IsPasswordValid(mconn, collectionname, dataadmin) {
-			Response.Status = true
-			tokenstring, err := watoken.Encode(dataadmin.Username, os.Getenv(PASETOPRIVATEKEYENV))
-			if err != nil {
-				Response.Message = "Gagal Encode Token : " + err.Error()
-			} else {
-				Response.Message = "Selamat Datang"
-				Response.Token = tokenstring
-			}
-		} else {
-			Response.Message = "Password Salah"
-		}
+		fmt.Printf("InsertOneDoc: %v\n", err)
 	}
-
-	return GCFReturnStruct(Response)
+	insertedID = result.InsertedID.(primitive.ObjectID)
+	return
 }
 
-func GCFReturnStruct(DataStuct any) string {
-	jsondata, _ := json.Marshal(DataStuct)
-	return string(jsondata)
+func GetAllDocs(db *mongo.Database, col string, docs interface{}) interface{} {
+	cols := db.Collection(col)
+	filter := bson.M{}
+	cursor, err := cols.Find(context.TODO(), filter)
+	if err != nil {
+		fmt.Println("Error GetAllDocs in colection", col, ":", err)
+	}
+	err = cursor.All(context.TODO(), &docs)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return docs
 }
 
-func InsertData(db *mongo.Database, collection string, userdata Admin) string {
-	hash, _ := HashPassword(userdata.Password)
-	userdata.Password = hash
-	atdb.InsertOneDoc(db, collection, userdata)
-	return "Username : " + userdata.Username + "\nPassword : " + userdata.Password
+func UpdateOneDoc(db *mongo.Database, col string, filter, update interface{}) (err error) {
+    cols := db.Collection(col)
+    result, err := cols.UpdateOne(context.Background(), filter, bson.M{"$set": update})
+    if err != nil {
+        fmt.Printf("UpdateOneDoc: %v\n", err)
+    }
+    if result.ModifiedCount == 0 {
+        err = errors.New("no data has been changed with the specified filter")
+        return err
+    }
+    return
 }
+
+
+func DeleteOneDoc(db *mongo.Database, col string, filter bson.M) (err error) {
+    cols := db.Collection(col)
+    result, err := cols.DeleteOne(context.Background(), filter)
+    if err != nil {
+        fmt.Printf("DeleteOneDoc: %v\n", err)
+    }
+    if result.DeletedCount == 0 {
+        err = fmt.Errorf("no data has been deleted with the specified filter")
+        return err
+    }
+    return
+}
+
+
+// User
+func InsertDataProduk(db *mongo.Database, col string, userdata Produk) (insertedID primitive.ObjectID, err error) {
+	insertedID, err = InsertOneDoc(db, col, userdata)
+	if err != nil {
+		fmt.Printf("InsertUser: %v\n", err)
+	}
+	return insertedID, err
+}
+
+
+
+
+
+
+
+

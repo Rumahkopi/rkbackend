@@ -10,3 +10,8 @@ type Credential struct {
 	Token   string `json:"token,omitempty" bson:"token,omitempty"`
 	Message string `json:"message,omitempty" bson:"message,omitempty"`
 }
+
+type Produk struct {
+	Nama string `bson:"nama,omitempty" json:"nama,omitempty"`
+	Harga string `bson:"harga,omitempty" json:"harga,omitempty"`
+}
