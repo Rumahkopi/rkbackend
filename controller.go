@@ -71,6 +71,20 @@ func InsertProduk(db *mongo.Database, col string, produkdata Produk) (insertedID
 	return insertedID, err
 }
 
+func GetAllDataProduk(db *mongo.Database, col string) (produklist [] Produk) {
+	cols := db.Collection(col)
+	filter := bson.M{}
+	cursor, err := cols.Find(context.TODO(), filter)
+	if err != nil {
+		fmt.Println("Error GetAllDocs in colection", col, ":", err)
+	}
+	err = cursor.All(context.TODO(), &produklist)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return produklist
+}
+
 
 
 

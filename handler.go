@@ -59,3 +59,9 @@ func InsertDataProduk(Mongoenv, dbname string, r *http.Request) string {
     }
     return GCFReturnStruct(resp)
 }
+
+func GetAllData(MONGOCONNSTRINGENV, dbname, collectionname string) string {
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	data := GetAllDataProduk(mconn, collectionname)
+	return GCFReturnStruct(data)
+}
