@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"fmt"
+	"strconv"
 
 	"github.com/aiteung/atdb"
 	"github.com/whatsauth/watoken"
@@ -48,23 +50,21 @@ func InsertData(db *mongo.Database, collection string, userdata Admin) string {
 	return "Username : " + userdata.Username + "\nPassword : " + userdata.Password
 }
 
-func InsertProduk(Mongoenv, dbname string, r *http.Request) string {
-	resp := new(Credential)
-	userdata := new(Admin)
-	resp.Status = false
-	conn := SetConnection(Mongoenv, dbname)
-
-	err := json.NewDecoder(r.Body).Decode(&userdata)
+func InsertProduk(Mongostring, dbname, colname string, r *http.Request) string {
+	req := new(Credential)
+	conn := SetConnection(Mongostring, dbname)
+	resp := new(Produk)
+	err := json.NewDecoder(r.Body).Decode(&resp)
 	if err != nil {
-		resp.Message = "error parsing application/json: " + err.Error()
+			req.Status = strconv.Itoa(http.StatusNotFound)
+			req.Message = "error parsing application/json: " + err.Error()
 	} else {
-		resp.Status = true
-		insertedID, err := InsertDataProduk(conn, "produk", *userdata)
-		if err != nil {
-			resp.Message = "Gagal memasukkan data ke database: " + err.Error()
-		} else {
-			resp.Message = "Berhasil Input data dengan ID: " + insertedID.Hex()
-		}
+			req.Status = strconv.Itoa(http.StatusOK)
+			Ins := InsertDataProduk(conn, colname,
+				resp.Nama,
+				resp.Harga)
+			req.Message = fmt.Sprintf("%v:%v", "Berhasil Input data", Ins)
 	}
-	return GCFReturnStruct(resp)
+	
+	return GCFReturnStruct(req)
 }

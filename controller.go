@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/aiteung/atdb"
 )
 
 func InsertOneDoc(db *mongo.Database, col string, docs interface{}) (insertedID primitive.ObjectID, err error) {
@@ -62,16 +63,15 @@ func DeleteOneDoc(db *mongo.Database, col string, filter bson.M) (err error) {
 }
 
 
-// User
-func InsertDataProduk(db *mongo.Database, col string, userdata Produk) (insertedID primitive.ObjectID, err error) {
-	insertedID, err = InsertOneDoc(db, col, userdata)
-	if err != nil {
-		fmt.Printf("InsertUser: %v\n", err)
-	}
-	return insertedID, err
+//Admin
+func InsertDataProduk(MongoConn *mongo.Database, colname string, nama, harga string) (InsertedID interface{}) {
+	req := new(Produk)
+	req.Nama = nama
+	req.Harga = harga
+
+	ins := atdb.InsertOneDoc(MongoConn, colname, req)
+	return ins
 }
-
-
 
 
 
