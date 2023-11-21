@@ -14,4 +14,5 @@ type Credential struct {
 type Produk struct {
 	Nama string `bson:"nama,omitempty" json:"nama,omitempty"`
 	Harga string `bson:"harga,omitempty" json:"harga,omitempty"`
+	Deskripsi string `bson:"deskripsi,omitempty" json:"deskripsi,omitempty"`
 }
