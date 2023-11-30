@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/aiteung/atdb"
 )
 
 func InsertOneDoc(db *mongo.Database, col string, docs interface{}) (insertedID primitive.ObjectID, err error) {
@@ -85,6 +86,12 @@ func GetAllDataProduk(db *mongo.Database, col string) (produklist [] Produk) {
 	return produklist
 }
 
+func InsertUser(db *mongo.Database, collection string, userdata Admin) string {
+	hash, _ := HashPassword(userdata.Password)
+	userdata.Password = hash
+	atdb.InsertOneDoc(db, collection, userdata)
+	return "Username : " + userdata.Username + "\nPassword : " + userdata.Password
+}
 
 
 
