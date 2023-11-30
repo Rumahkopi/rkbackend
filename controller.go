@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"github.com/aiteung/atdb"
+
 )
 
 func InsertOneDoc(db *mongo.Database, col string, docs interface{}) (insertedID primitive.ObjectID, err error) {
@@ -93,6 +94,19 @@ func InsertUser(db *mongo.Database, collection string, userdata Admin) string {
 	return "Username : " + userdata.Username + "\nPassword : " + userdata.Password
 }
 
+func DeleteProduk(db *mongo.Database, col string, _id primitive.ObjectID) (status bool, err error) {
+	cols := db.Collection(col)
+	filter := bson.M{"_id": _id}
+	result, err := cols.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return false, err
+	}
+	if result.DeletedCount == 0 {
+		err = fmt.Errorf("Data tidak berhasil dihapus")
+		return false, err
+	}
+	return true, nil
+}
 
 
 
