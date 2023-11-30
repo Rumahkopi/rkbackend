@@ -1,4 +1,5 @@
 package rkbackend
+
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -6,8 +7,7 @@ import (
 type Admin struct {
 	Username string `bson:"username,omitempty" json:"username,omitempty"`
 	Password string `bson:"password,omitempty" json:"password,omitempty"`
-	Role string `bson:"role,omitempty" json:"role,omitempty"`
-
+	Role     string `bson:"role,omitempty" json:"role,omitempty"`
 }
 
 type Credential struct {
@@ -17,8 +17,14 @@ type Credential struct {
 }
 
 type Produk struct {
-	ID   primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Nama string `bson:"nama,omitempty" json:"nama,omitempty"`
-	Harga string `bson:"harga,omitempty" json:"harga,omitempty"`
-	Deskripsi string `bson:"deskripsi,omitempty" json:"deskripsi,omitempty"`
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Nama      string             `bson:"nama,omitempty" json:"nama,omitempty"`
+	Harga     string             `bson:"harga,omitempty" json:"harga,omitempty"`
+	Deskripsi string             `bson:"deskripsi,omitempty" json:"deskripsi,omitempty"`
+}
+
+type ResponseProduk struct {
+	Status  bool     `bson:"status" json:"status"`
+	Message string   `bson:"message,omitempty" json:"message,omitempty"`
+	Data    []Produk `bson:"data,omitempty" json:"data,omitempty"`
 }

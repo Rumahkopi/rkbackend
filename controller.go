@@ -94,6 +94,34 @@ func InsertUser(db *mongo.Database, collection string, userdata Admin) string {
 	return "Username : " + userdata.Username + "\nPassword : " + userdata.Password
 }
 
+func UpdateProduk(db *mongo.Database, col string, produk Produk) (produks Produk, status bool, err error) {
+	cols := db.Collection(col)
+	filter := bson.M{"_id": produk.ID}
+	update := bson.M{
+		"$set": bson.M{
+			"nama":               produk.Nama,
+			"harga":         produk.Harga,
+			"deskripsi":            produk.Deskripsi,
+		},
+	}
+
+	result, err := cols.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return produks, false, err
+	}
+	if result.ModifiedCount == 0 && result.UpsertedCount == 0 {
+		err = fmt.Errorf("Data tidak berhasil diupdate")
+		return produks, false, err
+	}
+
+	err = cols.FindOne(context.Background(), filter).Decode(&produks)
+	if err != nil {
+		return produks, false, err
+	}
+
+	return produks, true, nil
+}
+
 func DeleteProduk(db *mongo.Database, col string, _id primitive.ObjectID) (status bool, err error) {
 	cols := db.Collection(col)
 	filter := bson.M{"_id": _id}
@@ -108,6 +136,39 @@ func DeleteProduk(db *mongo.Database, col string, _id primitive.ObjectID) (statu
 	return true, nil
 }
 
+func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (todo Produk, err error) {
+	cols := db.Collection(col)
+	filter := bson.M{"_id": _id}
+
+	err = cols.FindOne(context.Background(), filter).Decode(&todo)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			fmt.Println("no data found for ID", _id)
+		} else {
+			fmt.Println("error retrieving data for ID", _id, ":", err.Error())
+		}
+	}
+
+	return todo, nil
+}
+
+func GetProdukFromName(db *mongo.Database, col string, nama string) (todo []Produk, err error) {
+	cols := db.Collection(col)
+	filter := bson.M{"nama": nama}
+
+	cursor, err := cols.Find(context.Background(), filter)
+	if err != nil {
+		fmt.Println("Error GetProdukFromName in colection", col, ":", err)
+		return nil, err
+	}
+
+	err = cursor.All(context.Background(), &todo)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return todo, nil
+}
 
 
 
