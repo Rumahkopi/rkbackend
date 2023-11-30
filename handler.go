@@ -114,3 +114,48 @@ func UpdateDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionnam
 
 	return GCFReturnStruct(resp)
 }
+
+func GCFHandlerDeleteTodo(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	resp := new(ResponseProduk)
+	produkdata := new(Produk)
+	resp.Status = false
+
+	token := r.Header.Get("Authorization")
+	token = strings.TrimPrefix(token, "Bearer ")
+	if token == "" {
+		resp.Message = "error parsing application/json1:"
+		return GCFReturnStruct(resp)
+	}
+
+	id := r.URL.Query().Get("_id")
+	if id == "" {
+		resp.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(resp)
+	}
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		resp.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(resp)
+	}
+
+	produkdata.ID = ID
+
+	err = json.NewDecoder(r.Body).Decode(&produkdata)
+	if err != nil {
+		resp.Message = "error parsing application/json3: " + err.Error()
+		return GCFReturnStruct(resp)
+	}
+
+	_, err = DeleteProduk(mconn, collectionname, produkdata.ID)
+	if err != nil {
+		resp.Message = err.Error()
+		return GCFReturnStruct(resp)
+	}
+
+	resp.Status = true
+	resp.Message = "Delete todo success"
+
+	return GCFReturnStruct(resp)
+}
