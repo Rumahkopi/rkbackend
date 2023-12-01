@@ -93,7 +93,7 @@ func GetDataTransaksi(MONGOCONNSTRINGENV, dbname, collectionname string) string 
 	return GCFReturnStruct(data)
 }
 
-func UpdateDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func UpdateDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	resp := new(ResponseProduk)
 	produkdata := new(Produk)
@@ -105,8 +105,6 @@ func UpdateDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionnam
 		resp.Message = "error parsing application/json1:"
 		return GCFReturnStruct(resp)
 	}
-
-	_, err := watoken.Decode(os.Getenv(PASETOPUBLICKEY), token)
 
 	id := r.URL.Query().Get("_id")
 	if id == "" {
@@ -141,7 +139,7 @@ func UpdateDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionnam
 	return GCFReturnStruct(resp)
 }
 
-func DeleteDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func DeleteDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	resp := new(ResponseProduk)
 	produkdata := new(Produk)
@@ -174,7 +172,7 @@ func DeleteDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionnam
 		return GCFReturnStruct(resp)
 	}
 
-	_, err = DeleteProduk(mconn, collectionname, produkdata.ID)
+	_, err = DeleteProduk(mconn, "produk", produkdata.ID)
 	if err != nil {
 		resp.Message = err.Error()
 		return GCFReturnStruct(resp)
