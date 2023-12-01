@@ -212,11 +212,11 @@ func DeleteDataProduk(Mongoenv, dbname string, r *http.Request) string {
 		resp.Message = "error parsing application/json: " + err.Error()
 	} else {
 		resp.Status = true
-		status, err := DeleteProduk(conn, "produk", produkdata.ID)
+		status, err := DeleteProduk(conn, "produk", produkdata.Nama)
 		if err != nil || !status {
-			resp.Message = "Gagal update data : " + err.Error()
+			resp.Message = "Gagal Delete data : " + err.Error()
 		} else {
-			resp.Message = "Berhasil Update data dengan ID: " + produkdata.ID.Hex()
+			resp.Message = "Berhasil Delete data dengan ID: " + produkdata.ID.Hex()
 		}
 	}
 	return GCFReturnStruct(resp)
