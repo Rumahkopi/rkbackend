@@ -1,15 +1,14 @@
-package rkbackend	
+package rkbackend
 
 import (
 	"context"
 	"errors"
 	"fmt"
 
+	"github.com/aiteung/atdb"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"github.com/aiteung/atdb"
-
 )
 
 func InsertOneDoc(db *mongo.Database, col string, docs interface{}) (insertedID primitive.ObjectID, err error) {
@@ -37,34 +36,32 @@ func GetAllDocs(db *mongo.Database, col string, docs interface{}) interface{} {
 }
 
 func UpdateOneDoc(db *mongo.Database, col string, filter, update interface{}) (err error) {
-    cols := db.Collection(col)
-    result, err := cols.UpdateOne(context.Background(), filter, bson.M{"$set": update})
-    if err != nil {
-        fmt.Printf("UpdateOneDoc: %v\n", err)
-    }
-    if result.ModifiedCount == 0 {
-        err = errors.New("no data has been changed with the specified filter")
-        return err
-    }
-    return
+	cols := db.Collection(col)
+	result, err := cols.UpdateOne(context.Background(), filter, bson.M{"$set": update})
+	if err != nil {
+		fmt.Printf("UpdateOneDoc: %v\n", err)
+	}
+	if result.ModifiedCount == 0 {
+		err = errors.New("no data has been changed with the specified filter")
+		return err
+	}
+	return
 }
-
 
 func DeleteOneDoc(db *mongo.Database, col string, filter bson.M) (err error) {
-    cols := db.Collection(col)
-    result, err := cols.DeleteOne(context.Background(), filter)
-    if err != nil {
-        fmt.Printf("DeleteOneDoc: %v\n", err)
-    }
-    if result.DeletedCount == 0 {
-        err = fmt.Errorf("no data has been deleted with the specified filter")
-        return err
-    }
-    return
+	cols := db.Collection(col)
+	result, err := cols.DeleteOne(context.Background(), filter)
+	if err != nil {
+		fmt.Printf("DeleteOneDoc: %v\n", err)
+	}
+	if result.DeletedCount == 0 {
+		err = fmt.Errorf("no data has been deleted with the specified filter")
+		return err
+	}
+	return
 }
 
-
-//Admin
+// Admin
 func InsertProduk(db *mongo.Database, col string, produkdata Produk) (insertedID primitive.ObjectID, err error) {
 	insertedID, err = InsertOneDoc(db, col, produkdata)
 	if err != nil {
@@ -73,7 +70,15 @@ func InsertProduk(db *mongo.Database, col string, produkdata Produk) (insertedID
 	return insertedID, err
 }
 
-func GetAllDataProduk(db *mongo.Database, col string) (produklist [] Produk) {
+func InsertTransaksi(db *mongo.Database, col string, transaksidata Transaksi) (insertedID primitive.ObjectID, err error) {
+	insertedID, err = InsertOneDoc(db, col, transaksidata)
+	if err != nil {
+		fmt.Printf("InsertUser: %v\n", err)
+	}
+	return insertedID, err
+}
+
+func GetAllDataProduk(db *mongo.Database, col string) (produklist []Produk) {
 	cols := db.Collection(col)
 	filter := bson.M{}
 	cursor, err := cols.Find(context.TODO(), filter)
@@ -99,9 +104,9 @@ func UpdateProduk(db *mongo.Database, col string, produk Produk) (produks Produk
 	filter := bson.M{"_id": produk.ID}
 	update := bson.M{
 		"$set": bson.M{
-			"nama":               produk.Nama,
-			"harga":         produk.Harga,
-			"deskripsi":            produk.Deskripsi,
+			"nama":      produk.Nama,
+			"harga":     produk.Harga,
+			"deskripsi": produk.Deskripsi,
 		},
 	}
 
@@ -169,6 +174,3 @@ func GetProdukFromName(db *mongo.Database, col string, nama string) (todo []Prod
 
 	return todo, nil
 }
-
-
-

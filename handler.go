@@ -61,6 +61,26 @@ func InsertDataProduk(Mongoenv, dbname string, r *http.Request) string {
 	return GCFReturnStruct(resp)
 }
 
+func InsertDataTransaksi(Mongoenv, dbname string, r *http.Request) string {
+	resp := new(Credential)
+	transaksidata := new(Transaksi)
+	resp.Status = false
+	conn := SetConnection(Mongoenv, dbname)
+	err := json.NewDecoder(r.Body).Decode(&transaksidata)
+	if err != nil {
+		resp.Message = "error parsing application/json: " + err.Error()
+	} else {
+		resp.Status = true
+		insertedID, err := InsertTransaksi(conn, "transaksi", *transaksidata)
+		if err != nil {
+			resp.Message = "Gagal memasukkan data ke database: " + err.Error()
+		} else {
+			resp.Message = "Berhasil Input data dengan ID: " + insertedID.Hex()
+		}
+	}
+	return GCFReturnStruct(resp)
+}
+
 func GetAllData(MONGOCONNSTRINGENV, dbname, collectionname string) string {
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	data := GetAllDataProduk(mconn, collectionname)
