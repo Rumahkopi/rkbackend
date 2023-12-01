@@ -87,6 +87,12 @@ func GetAllData(MONGOCONNSTRINGENV, dbname, collectionname string) string {
 	return GCFReturnStruct(data)
 }
 
+func GetDataTransaksi(MONGOCONNSTRINGENV, dbname, collectionname string) string {
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	data := GetAllDataTransaksi(mconn, collectionname)
+	return GCFReturnStruct(data)
+}
+
 func UpdateDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	resp := new(ResponseProduk)
@@ -135,7 +141,7 @@ func UpdateDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionnam
 	return GCFReturnStruct(resp)
 }
 
-func GCFHandlerDeleteTodo(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func DeleteDataProduk(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	resp := new(ResponseProduk)
 	produkdata := new(Produk)

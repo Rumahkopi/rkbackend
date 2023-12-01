@@ -92,6 +92,20 @@ func GetAllDataProduk(db *mongo.Database, col string) (produklist []Produk) {
 	return produklist
 }
 
+func GetAllDataTransaksi(db *mongo.Database, col string) (transaksilist []Produk) {
+	cols := db.Collection(col)
+	filter := bson.M{}
+	cursor, err := cols.Find(context.TODO(), filter)
+	if err != nil {
+		fmt.Println("Error GetAllDocs in colection", col, ":", err)
+	}
+	err = cursor.All(context.TODO(), &transaksilist)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return transaksilist
+}
+
 func InsertUser(db *mongo.Database, collection string, userdata Admin) string {
 	hash, _ := HashPassword(userdata.Password)
 	userdata.Password = hash
@@ -107,6 +121,7 @@ func UpdateProduk(db *mongo.Database, col string, produk Produk) (produks Produk
 			"nama":      produk.Nama,
 			"harga":     produk.Harga,
 			"deskripsi": produk.Deskripsi,
+			"stok":      produk.Stok,
 		},
 	}
 

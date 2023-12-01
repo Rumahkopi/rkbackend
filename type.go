@@ -21,6 +21,7 @@ type Produk struct {
 	Nama      string             `bson:"nama,omitempty" json:"nama,omitempty"`
 	Harga     string             `bson:"harga,omitempty" json:"harga,omitempty"`
 	Deskripsi string             `bson:"deskripsi,omitempty" json:"deskripsi,omitempty"`
+	Stok      string             `bson:"stok,omitempty" json:"stok,omitempty"`
 }
 
 type ResponseProduk struct {
