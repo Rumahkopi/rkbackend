@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/whatsauth/watoken"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Login(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
@@ -93,93 +91,133 @@ func GetDataTransaksi(MONGOCONNSTRINGENV, dbname, collectionname string) string 
 	return GCFReturnStruct(data)
 }
 
-func UpdateDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
-	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
-	resp := new(ResponseProduk)
+// func UpdateDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+// 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+// 	resp := new(ResponseProduk)
+// 	produkdata := new(Produk)
+// 	resp.Status = false
+
+// 	token := r.Header.Get("Authorization")
+// 	token = strings.TrimPrefix(token, "Bearer ")
+// 	if token == "" {
+// 		resp.Message = "error parsing application/json1:"
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	id := r.URL.Query().Get("_id")
+// 	if id == "" {
+// 		resp.Message = "Missing '_id' parameter in the URL"
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	ID, err := primitive.ObjectIDFromHex(id)
+// 	if err != nil {
+// 		resp.Message = "Invalid '_id' parameter in the URL"
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	produkdata.ID = ID
+
+// 	err = json.NewDecoder(r.Body).Decode(&produkdata)
+// 	if err != nil {
+// 		resp.Message = "error parsing application/json3: " + err.Error()
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	produk, _, err := UpdateProduk(mconn, collectionname, *produkdata)
+// 	if err != nil {
+// 		resp.Message = err.Error()
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	resp.Status = true
+// 	resp.Message = "Update todo success"
+// 	resp.Data = []Produk{produk}
+
+// 	return GCFReturnStruct(resp)
+// }
+
+// func DeleteDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+// 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+// 	resp := new(ResponseProduk)
+// 	produkdata := new(Produk)
+// 	resp.Status = false
+
+// 	token := r.Header.Get("Authorization")
+// 	token = strings.TrimPrefix(token, "Bearer ")
+// 	if token == "" {
+// 		resp.Message = "error parsing application/json1:"
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	id := r.URL.Query().Get("_id")
+// 	if id == "" {
+// 		resp.Message = "Missing '_id' parameter in the URL"
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	ID, err := primitive.ObjectIDFromHex(id)
+// 	if err != nil {
+// 		resp.Message = "Invalid '_id' parameter in the URL"
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	produkdata.ID = ID
+
+// 	err = json.NewDecoder(r.Body).Decode(&produkdata)
+// 	if err != nil {
+// 		resp.Message = "error parsing application/json3: " + err.Error()
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	_, err = DeleteProduk(mconn, collectionname, produkdata.ID)
+// 	if err != nil {
+// 		resp.Message = err.Error()
+// 		return GCFReturnStruct(resp)
+// 	}
+
+// 	resp.Status = true
+// 	resp.Message = "Delete todo success"
+
+// 	return GCFReturnStruct(resp)
+// }
+
+func UpdateDataProduk(Mongoenv, dbname string, r *http.Request) string {
+	resp := new(Credential)
 	produkdata := new(Produk)
 	resp.Status = false
-
-	token := r.Header.Get("Authorization")
-	token = strings.TrimPrefix(token, "Bearer ")
-	if token == "" {
-		resp.Message = "error parsing application/json1:"
-		return GCFReturnStruct(resp)
-	}
-
-	id := r.URL.Query().Get("_id")
-	if id == "" {
-		resp.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(resp)
-	}
-
-	ID, err := primitive.ObjectIDFromHex(id)
+	conn := SetConnection(Mongoenv, dbname)
+	err := json.NewDecoder(r.Body).Decode(&produkdata)
 	if err != nil {
-		resp.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(resp)
+		resp.Message = "error parsing application/json: " + err.Error()
+	} else {
+		resp.Status = true
+		produks, status, err := UpdateProduk(conn, "produk", *produkdata)
+		if err != nil || !status {
+			resp.Message = "Gagal update data : " + err.Error()
+		} else {
+			resp.Message = "Berhasil Update data dengan ID: " + produks.ID.Hex()
+		}
 	}
-
-	produkdata.ID = ID
-
-	err = json.NewDecoder(r.Body).Decode(&produkdata)
-	if err != nil {
-		resp.Message = "error parsing application/json3: " + err.Error()
-		return GCFReturnStruct(resp)
-	}
-
-	produk, _, err := UpdateProduk(mconn, collectionname, *produkdata)
-	if err != nil {
-		resp.Message = err.Error()
-		return GCFReturnStruct(resp)
-	}
-
-	resp.Status = true
-	resp.Message = "Update todo success"
-	resp.Data = []Produk{produk}
-
 	return GCFReturnStruct(resp)
 }
 
-func DeleteDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
-	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
-	resp := new(ResponseProduk)
+func DeleteDataProduk(Mongoenv, dbname string, r *http.Request) string {
+	resp := new(Credential)
 	produkdata := new(Produk)
 	resp.Status = false
-
-	token := r.Header.Get("Authorization")
-	token = strings.TrimPrefix(token, "Bearer ")
-	if token == "" {
-		resp.Message = "error parsing application/json1:"
-		return GCFReturnStruct(resp)
-	}
-
-	id := r.URL.Query().Get("_id")
-	if id == "" {
-		resp.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(resp)
-	}
-
-	ID, err := primitive.ObjectIDFromHex(id)
+	conn := SetConnection(Mongoenv, dbname)
+	err := json.NewDecoder(r.Body).Decode(&produkdata)
 	if err != nil {
-		resp.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(resp)
+		resp.Message = "error parsing application/json: " + err.Error()
+	} else {
+		resp.Status = true
+		status, err := DeleteProduk(conn, "produk", produkdata.ID)
+		if err != nil || !status {
+			resp.Message = "Gagal update data : " + err.Error()
+		} else {
+			resp.Message = "Berhasil Update data dengan ID: " + produkdata.ID.Hex()
+		}
 	}
-
-	produkdata.ID = ID
-
-	err = json.NewDecoder(r.Body).Decode(&produkdata)
-	if err != nil {
-		resp.Message = "error parsing application/json3: " + err.Error()
-		return GCFReturnStruct(resp)
-	}
-
-	_, err = DeleteProduk(mconn, collectionname, produkdata.ID)
-	if err != nil {
-		resp.Message = err.Error()
-		return GCFReturnStruct(resp)
-	}
-
-	resp.Status = true
-	resp.Message = "Delete todo success"
-
 	return GCFReturnStruct(resp)
 }
