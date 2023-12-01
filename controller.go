@@ -156,11 +156,11 @@ func DeleteProduk(db *mongo.Database, col string, _id primitive.ObjectID) (statu
 	return true, nil
 }
 
-func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (todo Produk, err error) {
+func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (produklist Produk, err error) {
 	cols := db.Collection(col)
 	filter := bson.M{"_id": _id}
 
-	err = cols.FindOne(context.Background(), filter).Decode(&todo)
+	err = cols.FindOne(context.Background(), filter).Decode(&produklist)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			fmt.Println("no data found for ID", _id)
@@ -169,10 +169,10 @@ func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (to
 		}
 	}
 
-	return todo, nil
+	return produklist, nil
 }
 
-func GetProdukFromName(db *mongo.Database, col string, nama string) (todo []Produk, err error) {
+func GetProdukFromName(db *mongo.Database, col string, nama string) (produklist []Produk, err error) {
 	cols := db.Collection(col)
 	filter := bson.M{"nama": nama}
 
@@ -182,10 +182,10 @@ func GetProdukFromName(db *mongo.Database, col string, nama string) (todo []Prod
 		return nil, err
 	}
 
-	err = cursor.All(context.Background(), &todo)
+	err = cursor.All(context.Background(), &produklist)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	return todo, nil
+	return produklist, nil
 }

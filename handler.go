@@ -126,7 +126,7 @@ func UpdateDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http
 		return GCFReturnStruct(resp)
 	}
 
-	produk, _, err := UpdateProduk(mconn, "produk", *produkdata)
+	produk, _, err := UpdateProduk(mconn, collectionname, *produkdata)
 	if err != nil {
 		resp.Message = err.Error()
 		return GCFReturnStruct(resp)
@@ -172,7 +172,7 @@ func DeleteDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http
 		return GCFReturnStruct(resp)
 	}
 
-	_, err = DeleteProduk(mconn, "produk", produkdata.ID)
+	_, err = DeleteProduk(mconn, collectionname, produkdata.ID)
 	if err != nil {
 		resp.Message = err.Error()
 		return GCFReturnStruct(resp)
