@@ -24,17 +24,14 @@ type Produk struct {
 	Stok      string             `bson:"stok,omitempty" json:"stok,omitempty"`
 }
 
-type ResponseProduk struct {
-	Status  bool     `bson:"status" json:"status"`
-	Message string   `bson:"message,omitempty" json:"message,omitempty"`
-	Data    []Produk `bson:"data,omitempty" json:"data,omitempty"`
-}
-
 type Transaksi struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Nama     string             `bson:"nama,omitempty" json:"nama,omitempty"`
-	Harga    string             `bson:"harga,omitempty" json:"harga,omitempty"`
-	Alamat   string             `bson:"alamat,omitempty" json:"alamat,omitempty"`
-	NoHP     string             `bson:"nohp,omitempty" json:"nohp,omitempty"`
-	Quantity string             `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	ID          primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	NamaProduk  string             `bson:"namaproduk,omitempty" json:"namaproduk,omitempty"`
+	Harga       string             `bson:"harga,omitempty" json:"harga,omitempty"`
+	NamaPembeli string             `bson:"namapembeli,omitempty" json:"namapembeli,omitempty"`
+	Email       string             `bson:"email,omitempty" json:"email,omitempty"`
+	Alamat      string             `bson:"alamat,omitempty" json:"alamat,omitempty"`
+	NoHP        string             `bson:"nohp,omitempty" json:"nohp,omitempty"`
+	Quantity    string             `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Total       string             `bson:"total,omitempty" json:"total,omitempty"`
 }
