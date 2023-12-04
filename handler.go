@@ -150,18 +150,19 @@ func DeleteDataProduk(Mongoenv, dbname string, r *http.Request) string {
 
 	produkdata.ID = ID
 
-	err = json.NewDecoder(r.Body).Decode(&produkdata)
-	if err != nil {
-		resp.Message = "error parsing application/json: " + err.Error()
+	// err = json.NewDecoder(r.Body).Decode(&produkdata)
+	// if err != nil {
+	// 	resp.Message = "error parsing application/json: " + err.Error()
+	// } else {
+
+	resp.Status = true
+	status, err := DeleteProduk(conn, "produk", produkdata.ID)
+	if err != nil || !status {
+		resp.Message = "Gagal Delete data : " + err.Error()
 	} else {
-		resp.Status = true
-		status, err := DeleteProduk(conn, "produk", produkdata.ID)
-		if err != nil || !status {
-			resp.Message = "Gagal Delete data : " + err.Error()
-		} else {
-			resp.Message = "Berhasil Delete Data Produk"
-		}
+		resp.Message = "Berhasil Delete Data Produk"
 	}
+
 	return GCFReturnStruct(resp)
 }
 
