@@ -97,7 +97,23 @@ func UpdateDataProduk(Mongoenv, dbname string, r *http.Request) string {
 	produkdata := new(Produk)
 	resp.Status = false
 	conn := SetConnection(Mongoenv, dbname)
-	err := json.NewDecoder(r.Body).Decode(&produkdata)
+
+	id := r.URL.Query().Get("_id")
+	if id == "" {
+		resp.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(resp)
+	}
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		resp.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(resp)
+	}
+
+	produkdata.ID = ID
+
+	err = json.NewDecoder(r.Body).Decode(&produkdata)
+
 	if err != nil {
 		resp.Message = "error parsing application/json: " + err.Error()
 	} else {
