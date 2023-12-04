@@ -7,7 +7,6 @@ import (
 type Admin struct {
 	Username string `bson:"username,omitempty" json:"username,omitempty"`
 	Password string `bson:"password,omitempty" json:"password,omitempty"`
-	Role     string `bson:"role,omitempty" json:"role,omitempty"`
 }
 
 type Credential struct {

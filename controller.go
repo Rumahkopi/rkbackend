@@ -154,9 +154,9 @@ func UpdateProduk(db *mongo.Database, col string, produk Produk) (produks Produk
 	return produks, true, nil
 }
 
-func DeleteProduk(db *mongo.Database, col, nama string) (status bool, err error) {
+func DeleteProduk(db *mongo.Database, col, _id string) (status bool, err error) {
 	cols := db.Collection(col)
-	filter := bson.M{"nama": nama}
+	filter := bson.M{"_id": _id}
 	result, err := cols.DeleteOne(context.Background(), filter)
 	if err != nil {
 		return false, err
@@ -180,24 +180,6 @@ func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (*P
 			return nil, fmt.Errorf("no data found for ID %s", _id.Hex())
 		}
 		return nil, fmt.Errorf("error retrieving data for ID %s: %s", _id.Hex(), err.Error())
-	}
-
-	return produklist, nil
-}
-
-func GetProdukFromName(db *mongo.Database, col string, nama string) (produklist []Produk, err error) {
-	cols := db.Collection(col)
-	filter := bson.M{"nama": nama}
-
-	cursor, err := cols.Find(context.Background(), filter)
-	if err != nil {
-		fmt.Println("Error GetProdukFromName in colection", col, ":", err)
-		return nil, err
-	}
-
-	err = cursor.All(context.Background(), &produklist)
-	if err != nil {
-		fmt.Println(err)
 	}
 
 	return produklist, nil
