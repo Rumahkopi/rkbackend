@@ -132,7 +132,7 @@ func DeleteDataProduk(Mongoenv, dbname string, r *http.Request) string {
 	return GCFReturnStruct(resp)
 }
 
-func GCFHandlerGetTodo(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GetOneDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	resp := new(Credential)
 	produkdata := new(Produk)
