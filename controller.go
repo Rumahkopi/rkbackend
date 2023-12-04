@@ -168,17 +168,18 @@ func DeleteProduk(db *mongo.Database, col, nama string) (status bool, err error)
 	return true, nil
 }
 
-func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (produklist Produk, err error) {
+func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (*Produk, error) {
 	cols := db.Collection(col)
 	filter := bson.M{"_id": _id}
 
-	err = cols.FindOne(context.Background(), filter).Decode(&produklist)
+	produklist := new(Produk)
+
+	err := cols.FindOne(context.Background(), filter).Decode(produklist)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			fmt.Println("no data found for ID", _id)
-		} else {
-			fmt.Println("error retrieving data for ID", _id, ":", err.Error())
+			return nil, fmt.Errorf("no data found for ID %s", _id.Hex())
 		}
+		return nil, fmt.Errorf("error retrieving data for ID %s: %s", _id.Hex(), err.Error())
 	}
 
 	return produklist, nil

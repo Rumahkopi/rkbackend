@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/whatsauth/watoken"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Login(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
@@ -128,5 +129,40 @@ func DeleteDataProduk(Mongoenv, dbname string, r *http.Request) string {
 			resp.Message = "Berhasil Delete Data Produk"
 		}
 	}
+	return GCFReturnStruct(resp)
+}
+
+func GCFHandlerGetTodo(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	resp := new(Credential)
+	produkdata := new(Produk)
+	resp.Status = false
+	err := json.NewDecoder(r.Body).Decode(&produkdata)
+
+	id := r.URL.Query().Get("_id")
+	if id == "" {
+		resp.Message = "Missing '_id' parameter in the URL"
+		return GCFReturnStruct(resp)
+	}
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		resp.Message = "Invalid '_id' parameter in the URL"
+		return GCFReturnStruct(resp)
+	}
+
+	produkdata.ID = ID
+
+	// Menggunakan fungsi GetProdukFromID untuk mendapatkan data produk berdasarkan ID
+	produkdata, err = GetProdukFromID(mconn, collectionname, ID)
+	if err != nil {
+		resp.Message = err.Error()
+		return GCFReturnStruct(resp)
+	}
+
+	resp.Status = true
+	resp.Message = "Get todo success"
+	resp.Data = []Produk{*produkdata}
+
 	return GCFReturnStruct(resp)
 }

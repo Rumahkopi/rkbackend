@@ -11,9 +11,10 @@ type Admin struct {
 }
 
 type Credential struct {
-	Status  bool   `json:"status" bson:"status"`
-	Token   string `json:"token,omitempty" bson:"token,omitempty"`
-	Message string `json:"message,omitempty" bson:"message,omitempty"`
+	Status  bool     `json:"status" bson:"status"`
+	Token   string   `json:"token,omitempty" bson:"token,omitempty"`
+	Message string   `json:"message,omitempty" bson:"message,omitempty"`
+	Data    []Produk `bson:"data,omitempty" json:"data,omitempty"`
 }
 
 type Produk struct {
