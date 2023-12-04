@@ -161,7 +161,7 @@ func GetOneDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http
 	}
 
 	resp.Status = true
-	resp.Message = "Get todo success"
+	resp.Message = "Get Data Berhasil"
 	resp.Data = []Produk{*produkdata}
 
 	return GCFReturnStruct(resp)
