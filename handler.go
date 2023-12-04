@@ -18,21 +18,17 @@ func Login(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname strin
 	if err != nil {
 		Response.Message = "error parsing application/json: " + err.Error()
 	} else {
-		if dataadmin.Username == "" || dataadmin.Password == "" {
-			Response.Message = "Data Tidak Lengkap"
-		} else {
-			if IsPasswordValid(mconn, collectionname, dataadmin) {
-				Response.Status = true
-				tokenstring, err := watoken.Encode(dataadmin.Username, os.Getenv(PASETOPRIVATEKEYENV))
-				if err != nil {
-					Response.Message = "Gagal Encode Token : " + err.Error()
-				} else {
-					Response.Message = "Selamat Datang"
-					Response.Token = tokenstring
-				}
+		if IsPasswordValid(mconn, collectionname, dataadmin) {
+			Response.Status = true
+			tokenstring, err := watoken.Encode(dataadmin.Username, os.Getenv(PASETOPRIVATEKEYENV))
+			if err != nil {
+				Response.Message = "Gagal Encode Token : " + err.Error()
 			} else {
-				Response.Message = "Password Salah"
+				Response.Message = "Selamat Datang"
+				Response.Token = tokenstring
 			}
+		} else {
+			Response.Message = "Password Salah"
 		}
 	}
 
@@ -74,8 +70,6 @@ func InsertDataTransaksi(Mongoenv, dbname string, r *http.Request) string {
 	err := json.NewDecoder(r.Body).Decode(&transaksidata)
 	if err != nil {
 		resp.Message = "error parsing application/json: " + err.Error()
-	} else if transaksidata.NamaPembeli == "" || transaksidata.Email == "" || transaksidata.Alamat == "" || transaksidata.NoHP == "" {
-		resp.Message = "Data Tidak Boleh Kosong"
 	} else {
 		resp.Status = true
 		insertedID, err := InsertTransaksi(conn, "transaksi", *transaksidata)
@@ -124,8 +118,6 @@ func UpdateDataProduk(Mongoenv, dbname string, r *http.Request) string {
 
 	if err != nil {
 		resp.Message = "error parsing application/json: " + err.Error()
-	} else if produkdata.Nama == "" || produkdata.Harga == "" || produkdata.Deskripsi == "" || produkdata.Stok == "" {
-		resp.Message = "Data Tidak Boleh Kosong"
 	} else {
 		resp.Status = true
 		produks, status, err := UpdateProduk(conn, "produk", *produkdata)
@@ -163,7 +155,7 @@ func DeleteDataProduk(Mongoenv, dbname string, r *http.Request) string {
 		resp.Message = "error parsing application/json: " + err.Error()
 	} else {
 		resp.Status = true
-		status, err := DeleteProduk(conn, "produk", produkdata.Nama)
+		status, err := DeleteProduk(conn, "produk", produkdata.ID)
 		if err != nil || !status {
 			resp.Message = "Gagal Delete data : " + err.Error()
 		} else {

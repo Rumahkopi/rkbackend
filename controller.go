@@ -154,7 +154,7 @@ func UpdateProduk(db *mongo.Database, col string, produk Produk) (produks Produk
 	return produks, true, nil
 }
 
-func DeleteProduk(db *mongo.Database, col, _id string) (status bool, err error) {
+func DeleteProduk(db *mongo.Database, col string, _id primitive.ObjectID) (status bool, err error) {
 	cols := db.Collection(col)
 	filter := bson.M{"_id": _id}
 	result, err := cols.DeleteOne(context.Background(), filter)
