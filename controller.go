@@ -71,7 +71,19 @@ func InsertProduk(db *mongo.Database, col string, produkdata Produk) (insertedID
 }
 
 func InsertTransaksi(db *mongo.Database, col string, transaksidata Transaksi) (insertedID primitive.ObjectID, err error) {
-	insertedID, err = InsertOneDoc(db, col, transaksidata)
+	objectid := primitive.NewObjectID()
+	data := bson.M{
+		"_id":         objectid,
+		"namaproduk":  transaksidata.NamaProduk,
+		"harga":       transaksidata.Harga,
+		"quantity":    transaksidata.Quantity,
+		"total":       transaksidata.Total,
+		"namapembeli": transaksidata.NamaPembeli,
+		"email":       transaksidata.Email,
+		"alamat":      transaksidata.Alamat,
+		"nohp":        transaksidata.NoHP,
+	}
+	insertedID, err = InsertOneDoc(db, col, data)
 	if err != nil {
 		fmt.Printf("InsertUser: %v\n", err)
 	}
@@ -92,7 +104,7 @@ func GetAllDataProduk(db *mongo.Database, col string) (produklist []Produk) {
 	return produklist
 }
 
-func GetAllDataTransaksi(db *mongo.Database, col string) (transaksilist []Produk) {
+func GetAllDataTransaksi(db *mongo.Database, col string) (transaksilist []Transaksi) {
 	cols := db.Collection(col)
 	filter := bson.M{}
 	cursor, err := cols.Find(context.TODO(), filter)
