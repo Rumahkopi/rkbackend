@@ -134,6 +134,7 @@ func UpdateProduk(db *mongo.Database, col string, produk Produk) (produks Produk
 			"harga":     produk.Harga,
 			"deskripsi": produk.Deskripsi,
 			"stok":      produk.Stok,
+			"image":     produk.Image,
 		},
 	}
 
