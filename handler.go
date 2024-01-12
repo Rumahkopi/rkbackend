@@ -48,7 +48,7 @@ func InsertDataProduk(Mongoenv, dbname string, r *http.Request) string {
 	err := json.NewDecoder(r.Body).Decode(&produkdata)
 	if err != nil {
 		resp.Message = "error parsing application/json: " + err.Error()
-	} else if produkdata.Nama == "" || produkdata.Harga == "" || produkdata.Deskripsi == "" || produkdata.Stok == "" {
+	} else if produkdata.Nama == "" || produkdata.Harga == "" || produkdata.Deskripsi == "" || produkdata.Stok == "" || produkdata.Image == "" {
 		resp.Message = "Data Tidak Boleh Kosong"
 	} else {
 		resp.Status = true
