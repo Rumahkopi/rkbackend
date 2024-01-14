@@ -75,11 +75,8 @@ func InsertTransaksi(db *mongo.Database, col string, transaksidata Transaksi) (i
 	data := bson.M{
 		"_id":         objectid,
 		"namaproduk":  transaksidata.NamaProduk,
-		"harga":       transaksidata.Harga,
-		"quantity":    transaksidata.Quantity,
 		"total":       transaksidata.Total,
 		"namapembeli": transaksidata.NamaPembeli,
-		"email":       transaksidata.Email,
 		"alamat":      transaksidata.Alamat,
 		"nohp":        transaksidata.NoHP,
 	}
