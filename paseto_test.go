@@ -17,6 +17,7 @@ func TestGeneratePrivateKeyPaseto(t *testing.T) {
 	hasil, err := watoken.Encode("admin", privateKey)
 	fmt.Println(hasil, err)
 }
+
 // Hash Pass
 func TestGeneratePasswordHash(t *testing.T) {
 	password := "adminkopi"
@@ -54,13 +55,38 @@ func TestIsPasswordValid(t *testing.T) {
 	fmt.Println(anu)
 }
 
-func TestInsertUser(t *testing.T) {
-	mconn := SetConnection("MONGOSTRING", "proyek3")
-	var userdata Admin
-	userdata.Username = "admin"
-	userdata.Role = "Admin"
-	userdata.Password = "adminkopi"
+// func TestInsertUser(t *testing.T) {
+// 	mconn := SetConnection("MONGOSTRING", "proyek3")
+// 	var userdata Admin
+// 	userdata.Username = "admin"
+// 	userdata.Role = "Admin"
+// 	userdata.Password = "adminkopi"
 
-	nama := InsertUser(mconn, "admin", userdata)
-	fmt.Println(nama)
+// 	nama := InsertUser(mconn, "admin", userdata)
+// 	fmt.Println(nama)
+// }
+
+func TestGetTodoList(t *testing.T) {
+	mconn := SetConnection("MONGOSTRING", "proyek3")
+	anu := GetAllDataTransaksi(mconn, "transaksi")
+	fmt.Println(anu)
+}
+
+func TestInsert(t *testing.T) {
+	conn := SetConnection("MONGOSTRING", "proyek3")
+	var data Transaksi
+	data.NamaProduk = "kopi"
+	data.Harga = "10000"
+	data.Quantity = "2"
+	data.Total = "20000"
+	data.NamaPembeli = "Admin"
+	data.Email = "syahid@gmail.com"
+	data.Alamat = "Sarimanis"
+	data.NoHP = "08731231273712"
+
+	uhuy, err := InsertTransaksi(conn, "transaksi", data)
+	if err != nil {
+		fmt.Printf("InsertUser: %v\n", err)
+	}
+	fmt.Println(uhuy)
 }

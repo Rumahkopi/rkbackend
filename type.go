@@ -25,11 +25,9 @@ type Produk struct {
 	Image     string             `bson:"image,omitempty" json:"image,omitempty"`
 }
 
-type Transaksi struct {
-	ID          primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	NamaProduk  string             `bson:"namaproduk,omitempty" json:"namaproduk,omitempty"`
-	NamaPembeli string             `bson:"namapembeli,omitempty" json:"namapembeli,omitempty"`
-	Alamat      string             `bson:"alamat,omitempty" json:"alamat,omitempty"`
-	NoHP        string             `bson:"nohp,omitempty" json:"nohp,omitempty"`
-	Total       string             `bson:"total,omitempty" json:"total,omitempty"`
+type Pesan struct {
+	ID     primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Nama   string             `bson:"namap,omitempty" json:"nama,omitempty"`
+	Subjek string             `bson:"subjek,omitempty" json:"subjek,omitempty"`
+	Pesan  string             `bson:"pesan,omitempty" json:"pesan,omitempty"`
 }
