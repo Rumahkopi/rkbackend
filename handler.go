@@ -64,15 +64,15 @@ func InsertDataProduk(Mongoenv, dbname string, r *http.Request) string {
 
 func InsertDataPesan(Mongoenv, dbname string, r *http.Request) string {
 	resp := new(Credential)
-	transaksidata := new(Pesan)
+	pesandata := new(Pesan)
 	resp.Status = false
 	conn := SetConnection(Mongoenv, dbname)
-	err := json.NewDecoder(r.Body).Decode(&transaksidata)
+	err := json.NewDecoder(r.Body).Decode(&pesandata)
 	if err != nil {
 		resp.Message = "error parsing application/json: " + err.Error()
 	} else {
 		resp.Status = true
-		insertedID, err := InsertPesanReview(conn, "transaksi", *transaksidata)
+		insertedID, err := InsertPesanReview(conn, "review", *pesandata)
 		if err != nil {
 			resp.Message = "Gagal memasukkan data ke database: " + err.Error()
 		} else {
