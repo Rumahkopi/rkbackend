@@ -33,18 +33,18 @@ type Pesan struct {
 }
 
 type Keluhan struct {
-	ID     primitive.ObjectID 		   `bson:"_id,omitempty" json:"_id,omitempty"`
-	User_phone   		string             `bson:"user_phone,omitempty" json:"user_phone,omitempty"`
-	FormattedTime 		string             `bson:"formattedtime,omitempty" json:"formatedtime,omitempty"`
-	Content  			string             `bson:"content,omitempty" json:"content,omitempty"`
-	Complaint_number	int				   `bson:"Complaint_number,omitempty" json:"Complaint_number,omitempty"`	
+	ID               primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Complaint_number int                `bson:"complaint_number,omitempty" json:"complaint_number,omitempty"`
+	User_phone       string             `bson:"user_phone,omitempty" json:"user_phone,omitempty"`
+	FormattedTime    string             `bson:"formattedtime,omitempty" json:"formatedtime,omitempty"`
+	Content          string             `bson:"content,omitempty" json:"content,omitempty"`
 }
 
 type Transaksi struct {
-	ID     primitive.ObjectID 		   `bson:"_id,omitempty" json:"_id,omitempty"`
-	User_phone   		string             `bson:"user_phone,omitempty" json:"user_phone,omitempty"`
-	Formatted_time 		string             `bson:"formatted_time,omitempty" json:"formated_time,omitempty"`
-	transaksi_number	int				   `bson:"transaksi_number,omitempty" json:"transaksi_number,omitempty"`	
-	payment_proof		string			   `bson:"payment_proof,omitempty" json:"payment_proof,omitempty"`	
-	buktitf				string			   `bson:"buktitf,omitempty" json:"content,omitempty"`
+	ID               primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Transaksi_number int                `bson:"transaksi_number,omitempty" json:"transaksi_number,omitempty"`
+	User_phone       string             `bson:"user_phone,omitempty" json:"user_phone,omitempty"`
+	Formatted_time   string             `bson:"formatted_time,omitempty" json:"formated_time,omitempty"`
+	Payment_proof    string             `bson:"payment_proof,omitempty" json:"payment_proof,omitempty"`
+	Buktitf          string             `bson:"buktitf,omitempty" json:"content,omitempty"`
 }
