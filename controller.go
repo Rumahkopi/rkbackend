@@ -195,7 +195,7 @@ func GetAllDataKeluhan(db *mongo.Database, col string) (keluhanlist []Keluhan) {
 	return keluhanlist
 }
 
-func GetAllDataTransaksi(db *mongo.Database, col string) (transkasilist []Transaksi) {
+func GetAllDataTransaksi(db *mongo.Database, col string) (transaksilist []Transaksi) {
 	cols := db.Collection(col)
 	filter := bson.M{}
 	cursor, err := cols.Find(context.TODO(), filter)
@@ -206,5 +206,5 @@ func GetAllDataTransaksi(db *mongo.Database, col string) (transkasilist []Transa
 	if err != nil {
 		fmt.Println(err)
 	}
-	return transkasilist
+	return transaksilist
 }
