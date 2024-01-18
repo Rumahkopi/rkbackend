@@ -45,6 +45,5 @@ type Transaksi struct {
 	Transaksi_number int                `bson:"transaksi_number,omitempty" json:"transaksi_number,omitempty"`
 	User_phone       string             `bson:"user_phone,omitempty" json:"user_phone,omitempty"`
 	Formatted_time   string             `bson:"formatted_time,omitempty" json:"formated_time,omitempty"`
-	Payment_proof    string             `bson:"payment_proof,omitempty" json:"payment_proof,omitempty"`
 	Buktitf          string             `bson:"buktitf,omitempty" json:"content,omitempty"`
 }
