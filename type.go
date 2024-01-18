@@ -44,6 +44,6 @@ type Transaksi struct {
 	ID               primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
 	Transaksi_number int                `bson:"transaksi_number,omitempty" json:"transaksi_number,omitempty"`
 	User_phone       string             `bson:"user_phone,omitempty" json:"user_phone,omitempty"`
-	Formatted_time   string             `bson:"formatted_time,omitempty" json:"formated_time,omitempty"`
-	Buktitf          string             `bson:"buktitf,omitempty" json:"content,omitempty"`
+	Formatted_time   string             `bson:"formatted_time,omitempty" json:"formatted_time,omitempty"`
+	Buktitf          string             `bson:"buktitf,omitempty" json:"buktitf,omitempty"`
 }
