@@ -200,3 +200,15 @@ func GetOneDataProduk(MONGOCONNSTRINGENV, dbname, collectionname string, r *http
 
 	return GCFReturnStruct(resp)
 }
+
+func GetDataKeluhan(MONGOCONNSTRINGENV, dbname, collectionname string) string {
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	data := GetAllDataKeluhan(mconn, collectionname)
+	return GCFReturnStruct(data)
+}
+
+func GetDataTransaksi(MONGOCONNSTRINGENV, dbname, collectionname string) string {
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	data := GetAllDataTransaksi(mconn, collectionname)
+	return GCFReturnStruct(data)
+}

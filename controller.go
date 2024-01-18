@@ -99,18 +99,18 @@ func GetAllDataProduk(db *mongo.Database, col string) (produklist []Produk) {
 	return produklist
 }
 
-func GetAllDataReview(db *mongo.Database, col string) (transaksilist []Pesan) {
+func GetAllDataReview(db *mongo.Database, col string) (pesanlist []Pesan) {
 	cols := db.Collection(col)
 	filter := bson.M{}
 	cursor, err := cols.Find(context.TODO(), filter)
 	if err != nil {
 		fmt.Println("Error GetAllDocs in colection", col, ":", err)
 	}
-	err = cursor.All(context.TODO(), &transaksilist)
+	err = cursor.All(context.TODO(), &pesanlist)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return transaksilist
+	return pesanlist
 }
 
 func InsertUser(db *mongo.Database, collection string, userdata Admin) string {
@@ -179,4 +179,32 @@ func GetProdukFromID(db *mongo.Database, col string, _id primitive.ObjectID) (*P
 	}
 
 	return produklist, nil
+}
+
+func GetAllDataKeluhan(db *mongo.Database, col string) (keluhanlist []Keluhan) {
+	cols := db.Collection(col)
+	filter := bson.M{}
+	cursor, err := cols.Find(context.TODO(), filter)
+	if err != nil {
+		fmt.Println("Error GetAllDocs in colection", col, ":", err)
+	}
+	err = cursor.All(context.TODO(), &keluhanlist)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return keluhanlist
+}
+
+func GetAllDataTransaksi(db *mongo.Database, col string) (transkasilist []Transaksi) {
+	cols := db.Collection(col)
+	filter := bson.M{}
+	cursor, err := cols.Find(context.TODO(), filter)
+	if err != nil {
+		fmt.Println("Error GetAllDocs in colection", col, ":", err)
+	}
+	err = cursor.All(context.TODO(), &transaksilist)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return transkasilist
 }
