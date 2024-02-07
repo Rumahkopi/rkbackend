@@ -208,3 +208,96 @@ func GetAllDataTransaksi(db *mongo.Database, col string) (transaksilist []Transa
 	}
 	return transaksilist
 }
+
+func TransaksiCleared(db *mongo.Database, col string, done TransaksiClear) (bool, error) {
+	cols := db.Collection(col)
+
+	transaksi, err := GetTransaksiFromID(db, "transaksi", done.Transaksi.ID)
+	if err != nil {
+		fmt.Println("Error GetTodoFromID in colection", col, ":", err)
+		return false, err
+	}
+
+	fmt.Println("todo: ", transaksi)
+
+	insert := bson.D{
+		{Key: "isdone", Value: true},
+		{Key: "transaksi", Value: bson.D{
+			{Key: "_id", Value: transaksi.ID},
+			{Key: "transaksi_number", Value: transaksi.Transaksi_number},
+			{Key: "status", Value: transaksi.Status},
+			{Key: "user_phone", Value: transaksi.User_phone},
+			{Key: "formatted_time", Value: transaksi.Formatted_time},
+			{Key: "Buktitf", Value: transaksi.Buktitf},
+		}},
+	}
+
+	fmt.Println("insert: ", insert)
+
+	_, err = cols.InsertOne(context.Background(), insert)
+	if err != nil {
+		return false, err
+	}
+
+	status, err := DeleteProduk(db, "transaksi", transaksi.ID)
+	if err != nil {
+		fmt.Println("Error DeleteTodo in colection", col, ":", err)
+		return false, err
+	}
+
+	if !status {
+		fmt.Println("Data tidak berhasil dihapus")
+		return false, err
+	}
+
+	return true, nil
+}
+
+func GetTransaksiFromID(db *mongo.Database, col string, _id primitive.ObjectID) (*Transaksi, error) {
+	cols := db.Collection(col)
+	filter := bson.M{"_id": _id}
+
+	transaksilist := new(Transaksi)
+
+	err := cols.FindOne(context.Background(), filter).Decode(transaksilist)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, fmt.Errorf("no data found for ID %s", _id.Hex())
+		}
+		return nil, fmt.Errorf("error retrieving data for ID %s: %s", _id.Hex(), err.Error())
+	}
+
+	return transaksilist, nil
+}
+func DeleteTransaksi(db *mongo.Database, col string, _id primitive.ObjectID) (status bool, err error) {
+	cols := db.Collection(col)
+	filter := bson.M{"_id": _id}
+	result, err := cols.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return false, err
+	}
+	if result.DeletedCount == 0 {
+		err = fmt.Errorf("Data tidak berhasil dihapus")
+		return false, err
+	}
+	return true, nil
+}
+
+func GetTransaksiDone(db *mongo.Database, col string) (todo []TransaksiClear, err error) {
+	cols := db.Collection(col)
+	filter := bson.M{"isdone": true}
+
+	cur, err := cols.Find(context.Background(), filter)
+	if err != nil {
+		fmt.Println("Error GetTodoDone in colection", col, ":", err)
+		return todo, err
+	}
+
+	err = cur.All(context.Background(), &todo)
+	if err != nil {
+		fmt.Println("Error reading documents:", err)
+		return todo, err
+	}
+
+	return todo, nil
+}

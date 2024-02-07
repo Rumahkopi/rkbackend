@@ -7,6 +7,7 @@ import (
 	"github.com/aiteung/atdb"
 	"github.com/whatsauth/watoken"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // PASETO
@@ -66,27 +67,48 @@ func TestIsPasswordValid(t *testing.T) {
 // 	fmt.Println(nama)
 // }
 
-func TestGetTodoList(t *testing.T) {
+// func TestGetKeluhan(t *testing.T) {
+// 	mconn := SetConnection("MONGOSTRING", "proyek3")
+// 	anu := GetAllDataKeluhan(mconn, "keluhan")
+// 	fmt.Println(anu)
+// }
+
+// func TestGet(t *testing.T) {
+// 	mconn := SetConnection("MONGOSTRING", "proyek3")
+// 	anu := GetAllDataTransaksi(mconn, "transaksi")
+// 	fmt.Println(anu)
+// }
+
+func TestTodoClear(t *testing.T) {
 	mconn := SetConnection("MONGOSTRING", "proyek3")
-	anu := GetAllDataTransaksi(mconn, "transaksi")
-	fmt.Println(anu)
+	var data TransaksiClear
+
+	id := "65c08ccebf12beaa4a913bed"
+
+	ID, err := primitive.ObjectIDFromHex(id)
+	data.Transaksi.ID = ID
+	if err != nil {
+		fmt.Printf("Data tidak berhasil di selesaikan")
+	} else {
+
+		status, err := TransaksiCleared(mconn, "transaksi", data)
+		fmt.Println("Status", status)
+		if err != nil {
+			t.Errorf("Error cleared todo with id: %v", err)
+			return
+		} else {
+			fmt.Printf("Data berhasil di selesaikan untuk: %s\n", ID)
+		}
+		fmt.Println(data)
+	}
 }
 
-func TestInsert(t *testing.T) {
-	conn := SetConnection("MONGOSTRING", "proyek3")
-	var data Transaksi
-	data.NamaProduk = "kopi"
-	data.Harga = "10000"
-	data.Quantity = "2"
-	data.Total = "20000"
-	data.NamaPembeli = "Admin"
-	data.Email = "syahid@gmail.com"
-	data.Alamat = "Sarimanis"
-	data.NoHP = "08731231273712"
-
-	uhuy, err := InsertTransaksi(conn, "transaksi", data)
+func TestGetTodoDone(t *testing.T) {
+	mconn := SetConnection("MONGOSTRING", "proyek3")
+	anu, err := GetTransaksiDone(mconn, "transaksidone")
 	if err != nil {
-		fmt.Printf("InsertUser: %v\n", err)
+		t.Errorf("Error getting todo: %v", err)
+		return
 	}
-	fmt.Println(uhuy)
+	fmt.Println(anu)
 }
