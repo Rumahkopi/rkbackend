@@ -79,11 +79,11 @@ func TestIsPasswordValid(t *testing.T) {
 // 	fmt.Println(anu)
 // }
 
-func TestTodoClear(t *testing.T) {
+func TestTransaksiClear(t *testing.T) {
 	mconn := SetConnection("MONGOSTRING", "proyek3")
 	var data TransaksiClear
 
-	id := "65c08ccebf12beaa4a913bed"
+	id := "65c0e451abb612354c96f789"
 
 	ID, err := primitive.ObjectIDFromHex(id)
 	data.Transaksi.ID = ID
@@ -91,7 +91,7 @@ func TestTodoClear(t *testing.T) {
 		fmt.Printf("Data tidak berhasil di selesaikan")
 	} else {
 
-		status, err := TransaksiCleared(mconn, "transaksi", data)
+		status, err := TransaksiCleared(mconn, "transaksidone", data)
 		fmt.Println("Status", status)
 		if err != nil {
 			t.Errorf("Error cleared todo with id: %v", err)

@@ -53,3 +53,9 @@ type TransaksiClear struct {
 	IsDone    bool      `bson:"isdone,omitempty" json:"isdone,omitempty"`
 	Transaksi Transaksi `bson:"transaksi,omitempty" json:"transaksi,omitempty"`
 }
+
+type TransaksiClearResponse struct {
+	Status  bool             `bson:"status" json:"status"`
+	Message string           `bson:"message,omitempty" json:"message,omitempty"`
+	Data    []TransaksiClear `bson:"data,omitempty" json:"data,omitempty"`
+}
