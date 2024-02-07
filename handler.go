@@ -213,58 +213,58 @@ func GetDataTransaksi(MONGOCONNSTRINGENV, dbname, collectionname string) string 
 	return GCFReturnStruct(data)
 }
 
-// isDone
-func GCFHandlerIsDone(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
-	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
-	var transaksidata TransaksiClear
-	var Response TransaksiClearResponse
-	Response.Status = false
+// // isDone
+// func GCFHandlerIsDone(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+// 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+// 	var transaksidata TransaksiClear
+// 	var Response TransaksiClearResponse
+// 	Response.Status = false
 
-	id := r.URL.Query().Get("_id")
-	if id == "" {
-		Response.Message = "Missing '_id' parameter in the URL"
-		return GCFReturnStruct(Response)
-	}
+// 	id := r.URL.Query().Get("_id")
+// 	if id == "" {
+// 		Response.Message = "Missing '_id' parameter in the URL"
+// 		return GCFReturnStruct(Response)
+// 	}
 
-	ID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		Response.Message = "Invalid '_id' parameter in the URL"
-		return GCFReturnStruct(Response)
-	}
+// 	ID, err := primitive.ObjectIDFromHex(id)
+// 	if err != nil {
+// 		Response.Message = "Invalid '_id' parameter in the URL"
+// 		return GCFReturnStruct(Response)
+// 	}
 
-	transaksidata.Transaksi.ID = ID
+// 	transaksidata.Transaksi.ID = ID
 
-	status, err := TransaksiCleared(mconn, collectionname, transaksidata)
-	if err != nil {
-		Response.Message = err.Error()
-		return GCFReturnStruct(Response)
-	}
+// 	status, err := TransaksiCleared(mconn, collectionname, transaksidata)
+// 	if err != nil {
+// 		Response.Message = err.Error()
+// 		return GCFReturnStruct(Response)
+// 	}
 
-	if status == false {
-		Response.Message = err.Error()
-		return GCFReturnStruct(Response)
-	}
+// 	if status == false {
+// 		Response.Message = err.Error()
+// 		return GCFReturnStruct(Response)
+// 	}
 
-	Response.Status = true
-	Response.Message = "IsDone success"
+// 	Response.Status = true
+// 	Response.Message = "IsDone success"
 
-	return GCFReturnStruct(Response)
-}
+// 	return GCFReturnStruct(Response)
+// }
 
-func GCFHandlerGetIsDone(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
-	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
-	var Response TransaksiClearResponse
-	Response.Status = false
+// func GCFHandlerGetIsDone(PASETOPUBLICKEY, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+// 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+// 	var Response TransaksiClearResponse
+// 	Response.Status = false
 
-	isdonelist, err := GetTransaksiDone(mconn, collectionname)
-	if err != nil {
-		Response.Message = err.Error()
-		return GCFReturnStruct(Response)
-	}
+// 	isdonelist, err := GetTransaksiDone(mconn, collectionname)
+// 	if err != nil {
+// 		Response.Message = err.Error()
+// 		return GCFReturnStruct(Response)
+// 	}
 
-	Response.Status = true
-	Response.Message = "Get IsDone success"
-	Response.Data = isdonelist
+// 	Response.Status = true
+// 	Response.Message = "Get IsDone success"
+// 	Response.Data = isdonelist
 
-	return GCFReturnStruct(Response)
-}
+// 	return GCFReturnStruct(Response)
+// }

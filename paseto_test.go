@@ -7,7 +7,6 @@ import (
 	"github.com/aiteung/atdb"
 	"github.com/whatsauth/watoken"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // PASETO
@@ -79,36 +78,36 @@ func TestIsPasswordValid(t *testing.T) {
 // 	fmt.Println(anu)
 // }
 
-func TestTransaksiClear(t *testing.T) {
-	mconn := SetConnection("MONGOSTRING", "proyek3")
-	var data TransaksiClear
+// func TestTransaksiClear(t *testing.T) {
+// 	mconn := SetConnection("MONGOSTRING", "proyek3")
+// 	var data TransaksiClear
 
-	id := "65c0e451abb612354c96f789"
+// 	id := "65c0e451abb612354c96f789"
 
-	ID, err := primitive.ObjectIDFromHex(id)
-	data.Transaksi.ID = ID
-	if err != nil {
-		fmt.Printf("Data tidak berhasil di selesaikan")
-	} else {
+// 	ID, err := primitive.ObjectIDFromHex(id)
+// 	data.Transaksi.ID = ID
+// 	if err != nil {
+// 		fmt.Printf("Data tidak berhasil di selesaikan")
+// 	} else {
 
-		status, err := TransaksiCleared(mconn, "transaksidone", data)
-		fmt.Println("Status", status)
-		if err != nil {
-			t.Errorf("Error cleared todo with id: %v", err)
-			return
-		} else {
-			fmt.Printf("Data berhasil di selesaikan untuk: %s\n", ID)
-		}
-		fmt.Println(data)
-	}
-}
+// 		status, err := TransaksiCleared(mconn, "transaksidone", data)
+// 		fmt.Println("Status", status)
+// 		if err != nil {
+// 			t.Errorf("Error cleared todo with id: %v", err)
+// 			return
+// 		} else {
+// 			fmt.Printf("Data berhasil di selesaikan untuk: %s\n", ID)
+// 		}
+// 		fmt.Println(data)
+// 	}
+// }
 
-func TestGetTodoDone(t *testing.T) {
-	mconn := SetConnection("MONGOSTRING", "proyek3")
-	anu, err := GetTransaksiDone(mconn, "transaksidone")
-	if err != nil {
-		t.Errorf("Error getting todo: %v", err)
-		return
-	}
-	fmt.Println(anu)
-}
+// func TestGetTodoDone(t *testing.T) {
+// 	mconn := SetConnection("MONGOSTRING", "proyek3")
+// 	anu, err := GetTransaksiDone(mconn, "transaksidone")
+// 	if err != nil {
+// 		t.Errorf("Error getting todo: %v", err)
+// 		return
+// 	}
+// 	fmt.Println(anu)
+// }
